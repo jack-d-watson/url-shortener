@@ -1,0 +1,25 @@
+{
+  "name": "url-shortener",
+  "version": "1.0.0",
+  "description": "example of a URL Shortener built with Express & Typescript",
+  "main": "index.js",
+  "repository": "git@github.com:jack-d-watson/url-shortener.git",
+  "author": "Jack Watson <jdwatson94@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.13",
+    "concurrently": "^7.0.0",
+    "nodemon": "^2.0.15",
+    "typescript": "^4.5.5"
+  },
+  "scripts": {
+    "start": "node dist/server.js",
+    "watch-ts": "tsc -w",
+    "build": "tsc",
+    "start-dev": "nodemon dist/server.js",
+    "debug": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,yellow.bold\" \"npm run watch-ts\" \"npm run start-dev\""
+  }
+}
