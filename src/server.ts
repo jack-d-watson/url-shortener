@@ -4,6 +4,11 @@ import { router as brijRouter } from "./routes/BrijRouter";
 
 const app = express();
 app.use(express.json());
+// Middleware to add some basic logging to track inbound requests
+app.use((req: Request, res: Response, next: NextFunction) => {
+    console.log(`[${new Date().toLocaleString()}]: Processing request to ${req.url}`);
+    next();
+})
 
 app.use(brijRouter);
 

@@ -52,7 +52,6 @@ router.post("/brij/shorten", (req: Request, res: Response) => {
 })
 
 router.get("/brij/stats", (req: Request, res: Response) => {
-    console.log()
     // Validate query params
     let apiTokenParam = req.query["api_token"] as string
     if(apiTokenParam === undefined || !UrlFriendlyBase64.isBase64(apiTokenParam)) {
