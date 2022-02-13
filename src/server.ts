@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response, NextFunction } from "express";
 import { env } from "process";
 import { router as brijRouter } from "./routes/BrijRouter";
 
@@ -6,6 +6,15 @@ const app = express();
 app.use(express.json());
 
 app.use(brijRouter);
+
+// Default route. If nothing else matches return 404
+app.all("*", (req: Request, res: Response) => {
+    return res.status(404);
+})
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+    console.error(`global error handler caught an error: ${err.message}`);
+})
 
 export const port = env.PORT || 8080
 app.listen(port, () => {

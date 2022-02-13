@@ -9,9 +9,9 @@ export default class UrlFriendlyBase64 {
     private static readonly base64Regex = /^[a-zA-Z0-9_-]+$/;
     private static readonly BASE_64_CHARS = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ_-"
     private static readonly BASE_64 = 64;
-    private _value: String;
+    private _value: string;
 
-    constructor(value: String) {
+    constructor(value: string) {
         this._value = value;
     }
 
@@ -19,7 +19,7 @@ export default class UrlFriendlyBase64 {
         return this._value
     }
 
-    set value(value: String) {
+    set value(value: string) {
         if(UrlFriendlyBase64.isBase64(value)) {
             this.value = value
         }
@@ -30,7 +30,7 @@ export default class UrlFriendlyBase64 {
      * @param str: Input string to check if it matches the Base 64 encoding defined in this class
      * @returns boolean: true if it matches our encoding
      */
-    static isBase64(str: String): boolean {
+    static isBase64(str: string): boolean {
         // Check if the input string matches our regex for a base64 string
         const base64Match = str.match(UrlFriendlyBase64.base64Regex);
 
@@ -46,7 +46,7 @@ export default class UrlFriendlyBase64 {
     }
 
     static encode(num: number, numberOfCharacter: NumberOfBase64Characters) : UrlFriendlyBase64 {
-        let output : String = "";
+        let output : string = "";
         let shiftedNum = num;
         for(let characterNum = numberOfCharacter; characterNum > 0; characterNum--) {
             const remainder = shiftedNum % this.BASE_64

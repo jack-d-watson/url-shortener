@@ -3,7 +3,14 @@ import { Table } from "../datastore/Table";
 
 const NUM_DIGITS = 5
 
-export function generateShortUrl(database: Table, token: UrlFriendlyBase64, fullUrl: string) : String {
+/**
+ * 
+ * @param database connection to the database
+ * @param token existing api token
+ * @param fullUrl url to shorten
+ * @returns a 
+ */
+export function generateShortUrl(database: Table, token: UrlFriendlyBase64, fullUrl: string) : string {
     const tokenData = database.getTokenData(token);
     if(!tokenData) {
         throw new Error("Token not recognized!")
@@ -20,4 +27,20 @@ export function generateShortUrl(database: Table, token: UrlFriendlyBase64, full
     }
 
     return shortUrl.value
+}
+
+/**
+ * 
+ * @param database connection to the database
+ * @param shortUrl shortUrl to look up
+ * @returns Full url associated with short url, if the short url can be found
+ */
+export function getFullUrlByShortUrl(database: Table, shortUrl: string) : string | undefined {
+    const url = database.getShortUrlData(new UrlFriendlyBase64(shortUrl));
+    if(url) {
+        // Increment counter for url
+        url.timesUsed++;
+        return url.fullUrl;
+    }
+    return undefined;
 }

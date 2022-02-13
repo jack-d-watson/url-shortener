@@ -36,7 +36,7 @@ Any other requests should result in 404 status code
 ### Response Body
 ```
 {
-    "<http://brij.it/login>": 1
+    "<http://brij.it/login>": 1 
 }
 ```
 

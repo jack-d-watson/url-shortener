@@ -1,7 +1,7 @@
 import { Router, Request, Response } from 'express';
-import { generateShortUrl } from '../utils/UrlUtils';
+import { generateShortUrl, getFullUrlByShortUrl } from '../utils/UrlUtils';
 import { Table } from '../datastore/Table';
-import { generateNewToken } from '../utils/TokenUtils';
+import { generateNewToken, getUrlStatsByToken } from '../utils/TokenUtils';
 import UrlFriendlyBase64 from '../types/UrlFriendlyBase64';
 import { port } from '../server';
 
@@ -18,7 +18,7 @@ router.post("/brij/create_token", (req: Request, res: Response) => {
 
 router.post("/brij/shorten", (req: Request, res: Response) => {
     // Validate query params
-    let apiTokenParam = req.query["api_token"] as String
+    let apiTokenParam = req.query["api_token"] as string
     if(apiTokenParam === undefined || !UrlFriendlyBase64.isBase64(apiTokenParam)) {
         return res.status(401).json({
             message: "api_token invalid or missing from query parameters of request"
@@ -35,7 +35,7 @@ router.post("/brij/shorten", (req: Request, res: Response) => {
     // Try to create a shortened url
     const fullUrl = req.body.url;
     const token = new UrlFriendlyBase64(apiTokenParam);
-    let shortenedUrl: String
+    let shortenedUrl: string
     try {
         shortenedUrl = generateShortUrl(database, token, fullUrl);
     }
@@ -51,18 +51,26 @@ router.post("/brij/shorten", (req: Request, res: Response) => {
     })
 })
 
-router.get("/brij/:id", (req: Request, res: Response) => {
-    const shortUrlToken = req.params.id
-    const url = database.getShortUrlData(new UrlFriendlyBase64(shortUrlToken))
-    if(url === undefined) {
-        return res.status(404)
+router.get("/brij/stats", (req: Request, res: Response) => {
+    console.log()
+    // Validate query params
+    let apiTokenParam = req.query["api_token"] as string
+    if(apiTokenParam === undefined || !UrlFriendlyBase64.isBase64(apiTokenParam)) {
+        return res.status(401).json({
+            message: "api_token invalid or missing from query parameters of request"
+        })
     }
 
-    return res.redirect(url.fullUrl);
+    const tokenStats = getUrlStatsByToken(database, new UrlFriendlyBase64(apiTokenParam));
+    return res.json(tokenStats)
 })
 
-router.post("/brij/stats", (req: Request, res: Response) => {
-    res.json({
-        "token": "12345"
-    })
+router.get("/brij/:id", (req: Request, res: Response) => {
+    const shortUrlToken = req.params.id
+    const fullUrl = getFullUrlByShortUrl(database, shortUrlToken)
+    if(fullUrl === undefined) {
+        return res.status(404)
+    }
+    return res.redirect(fullUrl);
 })
+
